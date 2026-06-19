@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
     <title>Claim Your $750 Cash App Reward!</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
@@ -21,9 +22,7 @@
             margin: 20px auto;
             padding: 20px;
         }
-        .header {
-            margin-bottom: 20px;
-        }
+
         .badge {
             display: inline-block;
             background: #ff0066;
@@ -84,6 +83,27 @@
             transform: scale(1.08);
             box-shadow: 0 15px 40px rgba(0, 255, 157, 0.6);
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #1a1533;
+            border: 4px solid #00ff9d;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 157, 0.5);
+        }
+
         .testimonials {
             margin: 40px 0;
             text-align: left;
@@ -102,16 +122,13 @@
             font-size: 0.85em;
             opacity: 0.8;
         }
-        .warning { color: #ffcc00; font-size: 0.9em; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="badge">🔥 LIMITED TIME ONLY</div>
-            <h1>Win $750 Cash App Money Right Now!</h1>
-            <p class="subheadline">Complete one quick offer and get paid instantly via Cash App</p>
-        </div>
+        <div class="badge">🔥 LIMITED TIME ONLY</div>
+        <h1>Win $750 Cash App Money Right Now!</h1>
+        <p class="subheadline">Complete one quick offer and get paid instantly via Cash App</p>
 
         <div class="timer">
             Offer expires in: <span id="timer">23:59:59</span>
@@ -123,9 +140,8 @@
             <p style="margin-top:10px; font-size:1.2em;">Cash App Balance</p>
         </div>
 
-        <!-- Main CTA -->
-        <a href="https://app.hawktrk.com/click?pid=2&offer_id=20133&sub2=u531675&sub5=Natok" 
-           class="cta-button" id="claimBtn">
+        <!-- Main CTA Button -->
+        <a href="#" class="cta-button" id="mainCTA" target="_blank" rel="noopener noreferrer">
             CLAIM $750 NOW →
         </a>
 
@@ -143,24 +159,49 @@
         </p>
 
         <footer>
-            <p class="warning">*Must be 18+. This is a sponsored offer. Results not guaranteed. Terms &amp; Conditions apply.</p>
-            <p style="margin-top:15px;">© 2026 GnG Rewards • Privacy Policy</p>
+            <p>*Must be 18+. This is a sponsored offer. Results not guaranteed. Terms apply.</p>
         </footer>
     </div>
 
+    <!-- Modal Popup -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:#00ff9d; margin-bottom:15px;">🎉 You're Almost There!</h2>
+            <p style="font-size:1.3em;">Claim your</p>
+            <div class="cash-amount">$750</div>
+            <p style="margin:15px 0 25px;">Cash App Reward</p>
+            
+            <a href="#" class="cta-button" id="modalCTA" target="_blank" rel="noopener noreferrer" style="font-size:1.4em; padding:16px 50px;">
+                GET $750 NOW →
+            </a>
+        </div>
+    </div>
+
+    <!-- AdBlueMedia Tracking Pixel (replace with your actual pixel if available) -->
+    <img src="https://app.hawktrk.com/click?pid=2&offer_id=20133&sub2=u531675&sub5=Natok&sub1=impression" 
+         style="display:none; width:1px; height:1px;" alt="" />
+
     <script>
+        const baseLink = "https://app.hawktrk.com/click?pid=2&offer_id=20133&sub2=u531675&sub5=Natok";
+        const landingUrl = encodeURIComponent(window.location.href);
+
+        // Dynamic link with landing page URL passed as sub1
+        function updateLinks() {
+            const fullLink = baseLink + "&sub1=" + landingUrl;
+            document.getElementById('mainCTA').href = fullLink;
+            document.getElementById('modalCTA').href = fullLink;
+        }
+
         // Countdown Timer
-        let timeLeft = 24 * 60 * 60; // 24 hours
+        let timeLeft = 24 * 60 * 60;
         const timerEl = document.getElementById('timer');
 
         const countdown = setInterval(() => {
             timeLeft--;
-            const hours = Math.floor(timeLeft / 3600);
-            const minutes = Math.floor((timeLeft % 3600) / 60);
-            const seconds = timeLeft % 60;
-
-            timerEl.textContent = 
-                `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            const h = Math.floor(timeLeft / 3600);
+            const m = Math.floor((timeLeft % 3600) / 60);
+            const s = timeLeft % 60;
+            timerEl.textContent = `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 
             if (timeLeft <= 0) {
                 clearInterval(countdown);
@@ -168,10 +209,24 @@
             }
         }, 1000);
 
-        // Optional: Track button clicks (you can add your pixel here later)
-        document.getElementById('claimBtn').addEventListener('click', function() {
-            console.log('User clicked CTA - Tracking event');
-            // Paste AdBlueMedia / Hawktrk tracking pixel here if needed
+        // Show modal popup after 2.5 seconds
+        setTimeout(() => {
+            document.getElementById('rewardModal').style.display = 'flex';
+        }, 2500);
+
+        // Close modal when clicking outside
+        document.getElementById('rewardModal').addEventListener('click', function(e) {
+            if (e.target === this) this.style.display = 'none';
+        });
+
+        // Initialize links
+        updateLinks();
+
+        // Optional click tracking
+        document.querySelectorAll('.cta-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                console.log('CTA clicked - Landing URL sent');
+            });
         });
     </script>
 </body>
